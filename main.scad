@@ -70,18 +70,20 @@ cover(70,0,0,0);
  door_a();}
  module door_a(){
      
+     //door_A横杆
      translate([0,-base_A_length-20,0]){
   for(i=[[0,0,0],[0,0,column_height+20]])
  translate(i){
  translate([-10*cos(45)+20/cos(45),20+base_A_length+10*cos(45),10])
  rotate([270,0,-45])
- color("gray"){
+ color("red"){
  extrusion(E2020,  base_B_length*cos(45)-40, center = false, cornerHole = false);
      translate([-10,0,-20])
     rotate([0,-45,0])
      extrusion_wedge_down(E2020,20);}
      }
      
+     //door_A_立柱
 translate([30,10+base_A_length+30,20])
  rotate([0,0,45])
  {
@@ -90,6 +92,14 @@ translate([30,10+base_A_length+30,20])
      translate([0,base_B_length*cos(45)-60-10*cos(45),0])
       extrusion(E2020,  column_height, center = false, cornerHole = false);
      }
+     //door_A_泡沫
+ translate([120,10+base_A_length+30,0])
+ rotate([0,0,45]) {
+ translate([-80,0,0])
+ color("green")
+ foam(base_B_length*cos(45)-40, foam_thickness,column_height+20+20+20);
+ }   
+     
  }
  }
  
@@ -121,6 +131,15 @@ translate([30,10+base_A_length+30,20])
       extrusion(E2020,  column_height, center = false, cornerHole = false);
      
      }
+     
+          //door_B_泡沫
+ translate([120+base_B_length,10+base_A_length+30,0])
+ rotate([0,0,45+90]) {
+ translate([80,120,0])
+ color("yellow")
+ foam(base_B_length*cos(45)-80, foam_thickness,column_height+20+20+20);
+ }  
+     
  }
      }
      
@@ -164,6 +183,14 @@ cube([2*extrusion_specs_offset*cos(45)+eps,2*extrusion_specs_offset,2*extrusion_
 
 module cover(x,i,j,k){
     rotate([i,j,k]){
+    
+
+     //盖子-泡沫板
+ translate([0,-10,45+x])
+   color("orange",0.5)
+ linear_extrude(height = 50, center = true, convexity = 10, slices = 20, scale = 1.0, $fn = 16)
+ polygon([[0,0],[base_B_length,0],[base_B_length,base_C_length+20],[base_B_length/2,base_B_length/2+base_A_length+20],[0,base_A_length+20]]);
+ 
 //base_A
  for(i=[[0,-10,x]])
  translate(i){
@@ -270,6 +297,7 @@ import("v-slot-gantry.stl",convexity=3);}
  
  //泡沫板B
  translate([20,20,0])
+ color("yellow")
 foam(base_B_length-40, foam_thickness,column_height+20+20+20);
  
  //泡沫板A 
@@ -283,6 +311,7 @@ foam(base_A_length-foam_thickness, foam_thickness,column_height+20+20+20);
 foam(base_A_length-foam_thickness, foam_thickness,column_height+20+20+20);
  
  module foam(x,y,z){
-     color("black",0.8)
+     color("gray",0.8)
      cube([x,y,z]);
      }
+     
