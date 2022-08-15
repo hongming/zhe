@@ -4,16 +4,17 @@ include <NopSCADlib/vitamins/extrusions.scad>
 include <NopSCADlib/vitamins/rails.scad>
 
   
- base_A_length=500;
+ base_A_length=550;
  base_B_length=1400;
- base_C_length=500;
+ base_C_length=550;
  column_height=1400;
  foam_thickness=50;
+ foam_alpha=0.5;
 
 //顶盖
 translate([0,10,column_height-40+10]){
 //间隔和旋转轴
-cover(70,0,0,0);
+cover(70,90,0,0);
 }
 
  
@@ -66,7 +67,7 @@ cover(70,0,0,0);
  
   //door_A
      translate([0,base_A_length+20,0]){
-         rotate([0,0,0])
+         rotate([0,0,-15])
  door_a();}
  module door_a(){
      
@@ -96,7 +97,6 @@ translate([30,10+base_A_length+30,20])
  translate([120,10+base_A_length+30,0])
  rotate([0,0,45]) {
  translate([-80,0,0])
- color("green")
  foam(base_B_length*cos(45)-40, foam_thickness,column_height+20+20+20);
  }   
      
@@ -123,6 +123,7 @@ translate([30,10+base_A_length+30,20])
      extrusion_wedge_up(E2020,20);
      }}
  
+     //竖杆
  translate([base_B_length-20-20*cos(45),10+base_A_length+30,20])
  rotate([0,0,45]){
  extrusion(E2020,  column_height, center = false, cornerHole = false);
@@ -136,7 +137,6 @@ translate([30,10+base_A_length+30,20])
  translate([120+base_B_length,10+base_A_length+30,0])
  rotate([0,0,45+90]) {
  translate([80,120,0])
- color("yellow")
  foam(base_B_length*cos(45)-80, foam_thickness,column_height+20+20+20);
  }  
      
@@ -187,7 +187,7 @@ module cover(x,i,j,k){
 
      //盖子-泡沫板
  translate([0,-10,45+x])
-   color("orange",0.5)
+   color("gray",foam_alpha)
  linear_extrude(height = 50, center = true, convexity = 10, slices = 20, scale = 1.0, $fn = 16)
  polygon([[0,0],[base_B_length,0],[base_B_length,base_C_length+20],[base_B_length/2,base_B_length/2+base_A_length+20],[0,base_A_length+20]]);
  
@@ -287,8 +287,8 @@ import("v-slot-gantry.stl",convexity=3);}
  
  
  //mount
- translate([base_B_length/2,430+20,0])
- for( i=[[0,0,0],[0,0,120],[0,0,240]]){
+ translate([base_B_length/2,20+50+200+300,0])
+ for( i=[[0,0,180],[0,0,300],[0,0,60]]){
  rotate(i)
  translate([0,-25,0])
           color("gray",0.5)
@@ -297,7 +297,6 @@ import("v-slot-gantry.stl",convexity=3);}
  
  //泡沫板B
  translate([20,20,0])
- color("yellow")
 foam(base_B_length-40, foam_thickness,column_height+20+20+20);
  
  //泡沫板A 
@@ -309,9 +308,16 @@ foam(base_A_length-foam_thickness, foam_thickness,column_height+20+20+20);
    translate([base_B_length-20,foam_thickness+20,0])
  rotate([0,0,90])
 foam(base_A_length-foam_thickness, foam_thickness,column_height+20+20+20);
+
+//泡沫板地板
+ translate([0,0,-20+50])
+   color("black",0.1)
+ linear_extrude(height = 50, center = true, convexity = 10, slices = 20, scale = 1.0, $fn = 16)
+ polygon([[20+50,20+50],[base_B_length-20-50,20+50],[base_B_length-20-50,base_C_length],[base_B_length/2,base_B_length/2+base_A_length+20-20/cos(45)-50/cos(45)],[20+50,base_A_length+0]]);
+
  
  module foam(x,y,z){
-     color("gray",0.8)
+     color("gray",foam_alpha)
      cube([x,y,z]);
      }
      
