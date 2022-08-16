@@ -9,12 +9,16 @@ include <NopSCADlib/vitamins/rails.scad>
  base_C_length=550;
  column_height=1400;
  foam_thickness=50;
- foam_alpha=0.5;
+ foam_alpha=0.3;
+
+
+translate([0,-1400,0]){
+
 
 //顶盖
 translate([0,10,column_height-40+10]){
 //间隔和旋转轴
-cover(70,90,0,0);
+cover(70,0,0,0);
 }
 
  
@@ -67,41 +71,9 @@ cover(70,90,0,0);
  
   //door_A
      translate([0,base_A_length+20,0]){
-         rotate([0,0,-15])
+         rotate([0,0,0])
  door_a();}
- module door_a(){
-     
-     //door_A横杆
-     translate([0,-base_A_length-20,0]){
-  for(i=[[0,0,0],[0,0,column_height+20]])
- translate(i){
- translate([-10*cos(45)+20/cos(45),20+base_A_length+10*cos(45),10])
- rotate([270,0,-45])
- color("red"){
- extrusion(E2020,  base_B_length*cos(45)-40, center = false, cornerHole = false);
-     translate([-10,0,-20])
-    rotate([0,-45,0])
-     extrusion_wedge_down(E2020,20);}
-     }
-     
-     //door_A_立柱
-translate([30,10+base_A_length+30,20])
- rotate([0,0,45])
- {
- extrusion(E2020,  column_height, center = false, cornerHole = false);
-     rotate([0,0,-90])
-     translate([0,base_B_length*cos(45)-60-10*cos(45),0])
-      extrusion(E2020,  column_height, center = false, cornerHole = false);
-     }
-     //door_A_泡沫
- translate([120,10+base_A_length+30,0])
- rotate([0,0,45]) {
- translate([-80,0,0])
- foam(base_B_length*cos(45)-40, foam_thickness,column_height+20+20+20);
- }   
-     
- }
- }
+ 
  
  
    //door_B
@@ -109,75 +81,97 @@ translate([30,10+base_A_length+30,20])
      rotate([0,0,0])
   door_b();}
      
-     module door_b(){
-         translate([-base_B_length,-base_A_length-20,0]){
-  for(i=[[0,0,0],[0,0,column_height+20]])
- translate(i){
- translate([base_B_length-10*cos(45)-20/cos(45),base_A_length+20-10*cos(45),10])
- rotate([270,0,45])
- translate([20,0,0])
- color("red"){
- extrusion(E2020,  base_B_length*cos(45)-20, center = false, cornerHole = false);
-         translate([-10,0,0])
-    rotate([0,45+90,0])
-     extrusion_wedge_up(E2020,20);
-     }}
+
  
-     //竖杆
- translate([base_B_length-20-20*cos(45),10+base_A_length+30,20])
- rotate([0,0,45]){
- extrusion(E2020,  column_height, center = false, cornerHole = false);
-          rotate([0,0,0])
-     translate([0,base_B_length*cos(45)-60-10*cos(45)+20,0])
-      extrusion(E2020,  column_height, center = false, cornerHole = false);
-     
+ //泡沫板B
+ translate([20,20,0])
+foam(base_B_length-40, foam_thickness,column_height+20+20+20);
+ 
+ //泡沫板A 
+  translate([foam_thickness+20,foam_thickness+20,0])
+ rotate([0,0,90])
+foam(base_A_length-foam_thickness, foam_thickness,column_height+20+20+20);
+ 
+  //泡沫板C
+   translate([base_B_length-20,foam_thickness+20,0])
+ rotate([0,0,90])
+foam(base_A_length-foam_thickness, foam_thickness,column_height+20+20+20);
+
+
+
+}
+
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+/**以下是Module等功能**/
+
+  //L型支架
+ module L_angle(x){
+ translate([-2,0,0])
+ cube([2,x,20]);
+ rotate([270,0,0])
+ translate([-2,0,0])
+ cube([2,x-20,20]);}
+
+ //泡沫
+ module foam(x,y,z){
+     color("gray",foam_alpha)
+     cube([x,y,z]);
      }
      
-          //door_B_泡沫
- translate([120+base_B_length,10+base_A_length+30,0])
- rotate([0,0,45+90]) {
- translate([80,120,0])
- foam(base_B_length*cos(45)-80, foam_thickness,column_height+20+20+20);
- }  
-     
+
+//mount
+ translate([base_B_length/2,20+50+200+300,50]){
+ for( i=[[0,0,180],[0,0,300],[0,0,60]]){
+ rotate(i)
+ translate([0,-25,0])
+          color("gray",0.5)
+ cube([430,50,50]);
  }
-     }
-     
- 
 
-  
- //铝型材的楔子切口-下方的
+ //重锤杆和重锤
+ translate([0,0,1000]){
+ cube([120,10,10]);
+  translate([120, 0, 0]) {
+    rotate([0,0,90])
+cube([500,10,10]);
 
-module  extrusion_wedge_down(extrusion_specs,extrusion_specs_offset){
-   
- difference(){
-translate([(extrusion_specs_offset/2)*cos(45),0,-(extrusion_specs_offset/2)*cos(45)]){
-rotate([0,45,0]){
-extrusion(extrusion_specs,extrusion_specs_offset,center=false,cornerHole=true);}}
+  }
+ translate([120, 200+300, 0]) {
+rotate([90,0,0])
+ cylinder(r1=80,r2=80,h=200);
 
-translate([-2*extrusion_specs_offset,-extrusion_specs_offset,-extrusion_specs_offset*cos(45)]){
-cube([4*extrusion_specs_offset,2*extrusion_specs_offset,extrusion_specs_offset*cos(45)]);}
+ }}
 
-}
+ }
 
-}
-
-//铝型材的楔子，上方的
-module  extrusion_wedge_up(extrusion_specs,extrusion_specs_offset){
-  difference(){
-translate([-(extrusion_specs_offset/2)*cos(45)+eps,0,(extrusion_specs_offset/2)*cos(45)+eps]){
-rotate([0,45,0]){
-extrusion(extrusion_specs,extrusion_specs_offset-eps,center=false,cornerHole=true);}}
-
-translate([0,-extrusion_specs_offset+eps,0]){
-cube([2*extrusion_specs_offset*cos(45)+eps,2*extrusion_specs_offset,2*extrusion_specs_offset/cos(45)]);
-    
-    }
-
-}}
+ //mount下的泡沫板地板
+ translate([0,0,-20+50])
+   color("black",0.5)
+ linear_extrude(height = 50, center = true, convexity = 10, slices = 20, scale = 1.0, $fn = 16)
+ polygon([[20+50,20+50],[base_B_length-20-50,20+50],[base_B_length-20-50,base_C_length],[base_B_length/2,base_B_length/2+base_A_length+20-20/cos(45)-50/cos(45)],[20+50,base_A_length+0]]);
 
 
-//顶盖
+
+ //顶盖
 // for(i=[[0,0,column_height+x]])
 
 
@@ -275,49 +269,106 @@ translate([base_B_length-10,0,x-100]){
 rotate([0,0,90])
 import("v-slot-gantry.stl",convexity=3);}
  }
- 
- 
- //L型支架
- module L_angle(x){
- translate([-2,0,0])
- cube([2,x,20]);
- rotate([270,0,0])
- translate([-2,0,0])
- cube([2,x-20,20]);}
- 
- 
- //mount
- translate([base_B_length/2,20+50+200+300,0])
- for( i=[[0,0,180],[0,0,300],[0,0,60]]){
- rotate(i)
- translate([0,-25,0])
-          color("gray",0.5)
- cube([430,50,50]);
+
+
+  
+ //铝型材的楔子切口-下方的
+
+module  extrusion_wedge_down(extrusion_specs,extrusion_specs_offset){
+   
+ difference(){
+translate([(extrusion_specs_offset/2)*cos(45),0,-(extrusion_specs_offset/2)*cos(45)]){
+rotate([0,45,0]){
+extrusion(extrusion_specs,extrusion_specs_offset,center=false,cornerHole=true);}}
+
+translate([-2*extrusion_specs_offset,-extrusion_specs_offset,-extrusion_specs_offset*cos(45)]){
+cube([4*extrusion_specs_offset,2*extrusion_specs_offset,extrusion_specs_offset*cos(45)]);}
+
+}
+
+}
+
+//铝型材的楔子，上方的
+module  extrusion_wedge_up(extrusion_specs,extrusion_specs_offset){
+  difference(){
+translate([-(extrusion_specs_offset/2)*cos(45)+eps,0,(extrusion_specs_offset/2)*cos(45)+eps]){
+rotate([0,45,0]){
+extrusion(extrusion_specs,extrusion_specs_offset-eps,center=false,cornerHole=true);}}
+
+translate([0,-extrusion_specs_offset+eps,0]){
+cube([2*extrusion_specs_offset*cos(45)+eps,2*extrusion_specs_offset,2*extrusion_specs_offset/cos(45)]);
+    
+    }
+
+}}
+
+//门A
+module door_a(){
+     
+     //door_A横杆
+     translate([0,-base_A_length-20,0]){
+  for(i=[[0,0,0],[0,0,column_height+20]])
+ translate(i){
+ translate([-10*cos(45)+20/cos(45),20+base_A_length+10*cos(45),10])
+ rotate([270,0,-45])
+ color("red"){
+ extrusion(E2020,  base_B_length*cos(45)-40, center = false, cornerHole = false);
+     translate([-10,0,-20])
+    rotate([0,-45,0])
+     extrusion_wedge_down(E2020,20);}
+     }
+     
+     //door_A_立柱
+translate([30,10+base_A_length+30,20])
+ rotate([0,0,45])
+ {
+ extrusion(E2020,  column_height, center = false, cornerHole = false);
+     rotate([0,0,-90])
+     translate([0,base_B_length*cos(45)-60-10*cos(45),0])
+      extrusion(E2020,  column_height, center = false, cornerHole = false);
+     }
+     //door_A_泡沫
+ translate([120,10+base_A_length+30,0])
+ rotate([0,0,45]) {
+ translate([-80,0,0])
+ foam(base_B_length*cos(45)-40, foam_thickness,column_height+20+20+20);
+ }   
+     
  }
- 
- //泡沫板B
- translate([20,20,0])
-foam(base_B_length-40, foam_thickness,column_height+20+20+20);
- 
- //泡沫板A 
-  translate([foam_thickness+20,foam_thickness+20,0])
- rotate([0,0,90])
-foam(base_A_length-foam_thickness, foam_thickness,column_height+20+20+20);
- 
-  //泡沫板C
-   translate([base_B_length-20,foam_thickness+20,0])
- rotate([0,0,90])
-foam(base_A_length-foam_thickness, foam_thickness,column_height+20+20+20);
+ }
 
-//泡沫板地板
- translate([0,0,-20+50])
-   color("black",0.1)
- linear_extrude(height = 50, center = true, convexity = 10, slices = 20, scale = 1.0, $fn = 16)
- polygon([[20+50,20+50],[base_B_length-20-50,20+50],[base_B_length-20-50,base_C_length],[base_B_length/2,base_B_length/2+base_A_length+20-20/cos(45)-50/cos(45)],[20+50,base_A_length+0]]);
-
+//门B
+module door_b(){
+         translate([-base_B_length,-base_A_length-20,0]){
+  for(i=[[0,0,0],[0,0,column_height+20]])
+ translate(i){
+ translate([base_B_length-10*cos(45)-20/cos(45),base_A_length+20-10*cos(45),10])
+ rotate([270,0,45])
+ translate([20,0,0])
+ color("red"){
+ extrusion(E2020,  base_B_length*cos(45)-20, center = false, cornerHole = false);
+         translate([-10,0,0])
+    rotate([0,45+90,0])
+     extrusion_wedge_up(E2020,20);
+     }}
  
- module foam(x,y,z){
-     color("gray",foam_alpha)
-     cube([x,y,z]);
+     //竖杆
+ translate([base_B_length-20-20*cos(45),10+base_A_length+30,20])
+ rotate([0,0,45]){
+ extrusion(E2020,  column_height, center = false, cornerHole = false);
+          rotate([0,0,0])
+     translate([0,base_B_length*cos(45)-60-10*cos(45)+20,0])
+      extrusion(E2020,  column_height, center = false, cornerHole = false);
+     
+     }
+     
+          //door_B_泡沫
+ translate([120+base_B_length,10+base_A_length+30,0])
+ rotate([0,0,45+90]) {
+ translate([80,120,0])
+ foam(base_B_length*cos(45)-80, foam_thickness,column_height+20+20+20);
+ }  
+     
+ }
      }
      
