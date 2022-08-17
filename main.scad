@@ -9,7 +9,7 @@ include <NopSCADlib/vitamins/rails.scad>
  base_C_length=500;
  column_height=1200;
  foam_thickness=10;
- foam_alpha=0.8;
+ foam_alpha=0.5;
 
 
 translate([0,0,0]){
